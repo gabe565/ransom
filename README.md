@@ -18,4 +18,5 @@ Run the command with any number of arguments. The arguments will be converted in
 ```shell
 $ ransom hello world
 :h::e::l::l::o::blank::w::o::r::l::d:
+INFO Copied to clipboard
 ```
