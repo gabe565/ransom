@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"context"
 	"strings"
 	"testing"
 
+	"github.com/gabe565/ransom/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
@@ -29,6 +31,7 @@ func Test_run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf strings.Builder
 			cmd := &cobra.Command{}
+			cmd.SetContext(config.NewContext(context.Background(), config.New()))
 			cmd.SetOut(&buf)
 			run(cmd, tt.args)
 			got := strings.TrimSuffix(buf.String(), "\n")
