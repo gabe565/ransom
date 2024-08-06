@@ -33,7 +33,9 @@ func Test_run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf strings.Builder
 			cmd := &cobra.Command{}
-			cmd.SetContext(config.NewContext(context.Background(), config.New()))
+			conf := config.New()
+			conf.NoCopy = true
+			cmd.SetContext(config.NewContext(context.Background(), conf))
 			cmd.SetOut(&buf)
 			tt.wantErr(t, run(cmd, tt.args))
 			got := strings.TrimSuffix(buf.String(), "\n")
