@@ -1,14 +1,18 @@
 package cmd
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
+	"os"
 
 	"github.com/charmbracelet/log"
 	"github.com/gabe565/ransom/internal/config"
 	"github.com/gabe565/ransom/internal/ransom"
+	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 	"golang.design/x/clipboard"
 )
@@ -16,7 +20,6 @@ import (
 func New() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "ransom string...",
-		Args:    cobra.MinimumNArgs(1),
 		RunE:    run,
 		Version: buildVersion(),
 
@@ -30,6 +33,8 @@ func New() *cobra.Command {
 	return cmd
 }
 
+var ErrArgs = errors.New("requires at least one argument")
+
 func run(cmd *cobra.Command, args []string) error {
 	slog.SetDefault(slog.New(log.New(cmd.ErrOrStderr())))
 
@@ -38,7 +43,24 @@ func run(cmd *cobra.Command, args []string) error {
 		panic("command missing config")
 	}
 
-	result := ransom.Default().Replace(args...)
+	var result string
+	if len(args) != 0 {
+		result = ransom.Default().Replace(args...)
+	} else {
+		if f, ok := cmd.InOrStdin().(*os.File); ok {
+			if isatty.IsTerminal(f.Fd()) || isatty.IsCygwinTerminal(f.Fd()) {
+				return ErrArgs
+			}
+		}
+
+		b, err := io.ReadAll(cmd.InOrStdin())
+		if err != nil {
+			return err
+		}
+		b = bytes.TrimSpace(b)
+
+		result = ransom.Default().Replace(string(b))
+	}
 	_, _ = io.WriteString(cmd.OutOrStdout(), result+"\n")
 
 	if !conf.NoCopy {
