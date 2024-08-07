@@ -15,12 +15,15 @@ import (
 
 func New() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:  "ransom string...",
-		Args: cobra.MinimumNArgs(1),
-		RunE: run,
+		Use:     "ransom string...",
+		Args:    cobra.MinimumNArgs(1),
+		RunE:    run,
+		Version: buildVersion(),
 
 		SilenceErrors: true,
 	}
+	cmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "commit %s" .Version}}
+`)
 	conf := config.New()
 	conf.RegisterFlags(cmd)
 	cmd.SetContext(config.NewContext(context.Background(), conf))
