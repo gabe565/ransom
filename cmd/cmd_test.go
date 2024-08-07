@@ -89,6 +89,12 @@ func Test_run(t *testing.T) {
 			":h::e::l::l::o::blank::w::o::r::l::d:\n",
 			require.NoError,
 		},
+		{
+			"empty string",
+			args{args: []string{""}},
+			"",
+			require.NoError,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

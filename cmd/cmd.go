@@ -61,6 +61,11 @@ func run(cmd *cobra.Command, args []string) error {
 
 		result = ransom.Default().Replace(string(b))
 	}
+
+	if len(result) == 0 {
+		return nil
+	}
+
 	_, _ = io.WriteString(cmd.OutOrStdout(), result+"\n")
 
 	if !conf.NoCopy {
