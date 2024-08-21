@@ -66,7 +66,9 @@ func run(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	_, _ = io.WriteString(cmd.OutOrStdout(), result+"\n")
+	if _, err := io.WriteString(cmd.OutOrStdout(), result+"\n"); err != nil {
+		return err
+	}
 
 	if !conf.NoCopy {
 		cmd.SilenceUsage = true
