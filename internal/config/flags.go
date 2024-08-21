@@ -8,5 +8,5 @@ const (
 
 func (c *Config) RegisterFlags(cmd *cobra.Command) {
 	fs := cmd.Flags()
-	fs.BoolVar(&c.NoCopy, NoCopyFlag, c.NoCopy, "Disable copying to the clipboard")
+	fs.BoolVarP(&c.NoCopy, NoCopyFlag, "n", c.NoCopy, "Disable copying to the clipboard")
 }
