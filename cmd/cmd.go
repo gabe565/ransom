@@ -54,10 +54,8 @@ func run(cmd *cobra.Command, args []string) error {
 			}
 		}
 	} else {
-		if f, ok := cmd.InOrStdin().(*os.File); ok {
-			if isatty.IsTerminal(f.Fd()) || isatty.IsCygwinTerminal(f.Fd()) {
-				return ErrArgs
-			}
+		if f, ok := cmd.InOrStdin().(*os.File); ok && isatty.IsTerminal(f.Fd()) || isatty.IsCygwinTerminal(f.Fd()) {
+			return ErrArgs
 		}
 
 		scanner := bufio.NewScanner(cmd.InOrStdin())
