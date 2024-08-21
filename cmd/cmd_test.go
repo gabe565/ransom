@@ -90,6 +90,12 @@ func Test_run(t *testing.T) {
 			require.NoError,
 		},
 		{
+			"stdin multiline",
+			args{stdin: strings.NewReader("hello\nworld")},
+			":h::e::l::l::o:\n:w::o::r::l::d:\n",
+			require.NoError,
+		},
+		{
 			"empty string",
 			args{args: []string{""}},
 			"",

@@ -1,13 +1,14 @@
 package cmd
 
 import (
-	"bytes"
+	"bufio"
 	"context"
 	"errors"
 	"fmt"
 	"io"
 	"log/slog"
 	"os"
+	"strings"
 
 	"github.com/charmbracelet/log"
 	"github.com/gabe565/ransom/internal/config"
@@ -43,9 +44,15 @@ func run(cmd *cobra.Command, args []string) error {
 		panic("command missing config")
 	}
 
+	replacer := ransom.Default()
 	var result string
 	if len(args) != 0 {
-		result = ransom.Default().Replace(args...)
+		result = replacer.Replace(args...)
+		if len(result) != 0 {
+			if _, err := io.WriteString(cmd.OutOrStdout(), result+"\n"); err != nil {
+				return err
+			}
+		}
 	} else {
 		if f, ok := cmd.InOrStdin().(*os.File); ok {
 			if isatty.IsTerminal(f.Fd()) || isatty.IsCygwinTerminal(f.Fd()) {
@@ -53,24 +60,21 @@ func run(cmd *cobra.Command, args []string) error {
 			}
 		}
 
-		b, err := io.ReadAll(cmd.InOrStdin())
-		if err != nil {
-			return err
+		scanner := bufio.NewScanner(cmd.InOrStdin())
+		for scanner.Scan() {
+			replaced := replacer.Replace(scanner.Text() + "\n")
+			if _, err := io.WriteString(cmd.OutOrStdout(), replaced); err != nil {
+				return err
+			}
+			result += replaced
 		}
-		b = bytes.TrimSpace(b)
-
-		result = ransom.Default().Replace(string(b))
+		if scanner.Err() != nil {
+			return scanner.Err()
+		}
+		result = strings.TrimRight(result, "\n")
 	}
 
-	if len(result) == 0 {
-		return nil
-	}
-
-	if _, err := io.WriteString(cmd.OutOrStdout(), result+"\n"); err != nil {
-		return err
-	}
-
-	if !conf.NoCopy {
+	if len(result) != 0 && !conf.NoCopy {
 		cmd.SilenceUsage = true
 		if err := clipboard.Init(); err != nil {
 			return fmt.Errorf("failed to copy to clipboard: %w", err)
