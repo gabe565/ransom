@@ -44,7 +44,10 @@ func run(cmd *cobra.Command, args []string) error {
 		panic("command missing config")
 	}
 
-	replacer := ransom.Default()
+	if conf.Prefix != "" {
+		conf.Prefix += "-"
+	}
+	replacer := ransom.Default(conf.Prefix)
 	var result string
 	if len(args) != 0 {
 		result = replacer.Replace(args...)

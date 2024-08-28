@@ -4,9 +4,9 @@ import "strings"
 
 const Space = "blank"
 
-func Default() *Replacer {
+func Default(prefix string) *Replacer {
 	return New(
-		WithAlphabet(),
+		WithAlphabet(prefix),
 		With(" ", Space),
 		WithWord("on"),
 		WithWord("back"),
@@ -40,7 +40,7 @@ func Default() *Replacer {
 
 func New(opts ...Option) *Replacer {
 	r := &Replacer{
-		once: make([]string, 0, len(opts)*2),
+		pre:  make([]string, 0, len(opts)*2),
 		loop: make([]string, 0, len(opts)*2),
 	}
 	for _, opt := range opts {
@@ -50,8 +50,9 @@ func New(opts ...Option) *Replacer {
 }
 
 type Replacer struct {
-	once []string
+	pre  []string
 	loop []string
+	post []string
 }
 
 func sep(s string) string {
@@ -107,8 +108,8 @@ func (r *Replacer) Replace(args ...string) string {
 	s = strings.ToLower(s)
 
 	// Run the initial replacers
-	if len(r.once) != 0 {
-		s = strings.NewReplacer(r.once...).Replace(s)
+	if len(r.pre) != 0 {
+		s = strings.NewReplacer(r.pre...).Replace(s)
 	}
 
 	// Surround with space since some replacers depend on it
@@ -126,6 +127,11 @@ func (r *Replacer) Replace(args ...string) string {
 				break
 			}
 		}
+	}
+
+	// Run the final replacers
+	if len(r.post) != 0 {
+		s = strings.NewReplacer(r.post...).Replace(s)
 	}
 
 	// Trim the spaces

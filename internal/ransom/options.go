@@ -20,10 +20,13 @@ func With(s ...string) Option {
 	}
 }
 
-func WithAlphabet() Option {
+func WithAlphabet(prefix string) Option {
 	return func(r *Replacer) {
 		for b := 'a'; b <= 'z'; b++ {
-			r.once = append(r.once, string(b), ":"+string(b)+":")
+			r.pre = append(r.pre, string(b), ":"+string(b)+":")
+			if prefix != "" {
+				r.post = append(r.post, ":"+string(b)+":", ":"+prefix+string(b)+":")
+			}
 		}
 	}
 }
