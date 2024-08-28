@@ -13,7 +13,7 @@ Fun command-line utility that converts a string into emoji codes.
 ## Installation
 
 ```shell
-go install github.com/gabe565/ransom
+go install github.com/gabe565/ransom@latest
 ```
 
 ## Usage
