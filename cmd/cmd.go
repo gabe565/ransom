@@ -10,12 +10,12 @@ import (
 	"os"
 	"strings"
 
+	"gabe565.com/ransom/internal/clipboard"
 	"gabe565.com/ransom/internal/config"
 	"gabe565.com/ransom/internal/ransom"
 	"github.com/charmbracelet/log"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
-	"golang.design/x/clipboard"
 )
 
 func New() *cobra.Command {
@@ -78,10 +78,10 @@ func run(cmd *cobra.Command, args []string) error {
 	if len(result) != 0 && !conf.NoCopy {
 		cmd.SilenceUsage = true
 		if err := clipboard.Init(); err != nil {
-			return fmt.Errorf("failed to copy to clipboard: %w", err)
+			return fmt.Errorf("failed to copy: %w", err)
 		}
 
-		clipboard.Write(clipboard.FmtText, []byte(result))
+		clipboard.WriteText(result)
 		slog.Info("Copied to clipboard")
 	}
 
