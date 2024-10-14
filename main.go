@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"os"
 
+	"gabe565.com/ransom/cmd"
 	"github.com/charmbracelet/log"
-	"github.com/gabe565/ransom/cmd"
 )
 
 func main() {

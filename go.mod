@@ -1,4 +1,4 @@
-module github.com/gabe565/ransom
+module gabe565.com/ransom
 
 go 1.23.0
 

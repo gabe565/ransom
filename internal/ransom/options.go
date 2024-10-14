@@ -1,6 +1,6 @@
 package ransom
 
-import "github.com/gabe565/ransom/internal/util"
+import "gabe565.com/ransom/internal/util"
 
 type Option func(r *Replacer)
 

@@ -10,9 +10,9 @@ import (
 	"os"
 	"strings"
 
+	"gabe565.com/ransom/internal/config"
+	"gabe565.com/ransom/internal/ransom"
 	"github.com/charmbracelet/log"
-	"github.com/gabe565/ransom/internal/config"
-	"github.com/gabe565/ransom/internal/ransom"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 	"golang.design/x/clipboard"
