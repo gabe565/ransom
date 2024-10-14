@@ -24,12 +24,14 @@ func New() *cobra.Command {
 		RunE:    run,
 		Version: buildVersion(),
 
-		SilenceErrors: true,
+		ValidArgsFunction: cobra.NoFileCompletions,
+		SilenceErrors:     true,
 	}
 	cmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "commit %s" .Version}}
 `)
 	conf := config.New()
 	conf.RegisterFlags(cmd)
+	conf.RegisterCompletions(cmd)
 	cmd.SetContext(config.NewContext(context.Background(), conf))
 	return cmd
 }
@@ -42,6 +44,10 @@ func run(cmd *cobra.Command, args []string) error {
 	conf, ok := config.FromContext(cmd.Context())
 	if !ok {
 		panic("command missing config")
+	}
+
+	if conf.Completion != "" {
+		return generateCompletion(cmd, conf.Completion)
 	}
 
 	if conf.Prefix != "" {
