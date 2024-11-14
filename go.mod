@@ -3,6 +3,7 @@ module gabe565.com/ransom
 go 1.23.3
 
 require (
+	gabe565.com/utils v0.0.0-20241114041836-facb2857c9b1
 	github.com/charmbracelet/log v0.4.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/spf13/cobra v1.8.1
@@ -27,6 +28,6 @@ require (
 	golang.org/x/exp/shiny v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/image v0.19.0 // indirect
 	golang.org/x/mobile v0.0.0-20240806205939-81131f6468ab // indirect
-	golang.org/x/sys v0.23.0 // indirect
+	golang.org/x/sys v0.26.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

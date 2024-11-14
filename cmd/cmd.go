@@ -13,26 +13,27 @@ import (
 	"gabe565.com/ransom/internal/clipboard"
 	"gabe565.com/ransom/internal/config"
 	"gabe565.com/ransom/internal/ransom"
+	"gabe565.com/utils/cobrax"
 	"github.com/charmbracelet/log"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )
 
-func New() *cobra.Command {
+func New(opts ...cobrax.Option) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "ransom string...",
-		RunE:    run,
-		Version: buildVersion(),
+		Use:  "ransom string...",
+		RunE: run,
 
 		ValidArgsFunction: cobra.NoFileCompletions,
 		SilenceErrors:     true,
 	}
-	cmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "commit %s" .Version}}
-`)
 	conf := config.New()
 	conf.RegisterFlags(cmd)
 	conf.RegisterCompletions(cmd)
 	cmd.SetContext(config.NewContext(context.Background(), conf))
+	for _, opt := range opts {
+		opt(cmd)
+	}
 	return cmd
 }
 

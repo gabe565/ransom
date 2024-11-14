@@ -5,12 +5,14 @@ import (
 	"os"
 
 	"gabe565.com/ransom/cmd"
+	"gabe565.com/utils/cobrax"
 	"github.com/charmbracelet/log"
 )
 
 func main() {
 	slog.SetDefault(slog.New(log.New(os.Stderr)))
-	if err := cmd.New().Execute(); err != nil {
+	root := cmd.New(cobrax.WithVersion(""))
+	if err := root.Execute(); err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
