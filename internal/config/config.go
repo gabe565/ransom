@@ -1,9 +1,8 @@
 package config
 
 type Config struct {
-	Completion string
-	NoCopy     bool
-	Prefix     string
+	NoCopy bool
+	Prefix string
 }
 
 func New() *Config {

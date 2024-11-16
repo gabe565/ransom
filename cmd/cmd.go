@@ -47,10 +47,6 @@ func run(cmd *cobra.Command, args []string) error {
 		panic("command missing config")
 	}
 
-	if conf.Completion != "" {
-		return generateCompletion(cmd, conf.Completion)
-	}
-
 	if conf.Prefix != "" {
 		conf.Prefix += "-"
 	}

@@ -3,7 +3,7 @@ module gabe565.com/ransom
 go 1.23.3
 
 require (
-	gabe565.com/utils v0.0.0-20241114041836-facb2857c9b1
+	gabe565.com/utils v0.0.0-20241116061915-abe2278ecd5c
 	github.com/charmbracelet/log v0.4.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/spf13/cobra v1.8.1
