@@ -1,14 +1,9 @@
 package config
 
-import (
-	"log/slog"
-
-	"github.com/charmbracelet/log"
-	"github.com/spf13/cobra"
-)
+import "github.com/spf13/cobra"
 
 func Load(cmd *cobra.Command) (*Config, error) {
-	slog.SetDefault(slog.New(log.New(cmd.ErrOrStderr())))
+	InitLog(cmd.ErrOrStderr())
 
 	conf, ok := FromContext(cmd.Context())
 	if !ok {
