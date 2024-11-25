@@ -7,14 +7,13 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
-	"os"
 	"strings"
 
 	"gabe565.com/ransom/internal/clipboard"
 	"gabe565.com/ransom/internal/config"
 	"gabe565.com/ransom/internal/ransom"
 	"gabe565.com/utils/cobrax"
-	"github.com/mattn/go-isatty"
+	"gabe565.com/utils/termx"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +53,7 @@ func run(cmd *cobra.Command, args []string) error {
 			}
 		}
 	} else {
-		if f, ok := cmd.InOrStdin().(*os.File); ok && isatty.IsTerminal(f.Fd()) || isatty.IsCygwinTerminal(f.Fd()) {
+		if termx.IsTerminal(cmd.InOrStdin()) {
 			return ErrArgs
 		}
 
