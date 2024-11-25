@@ -14,7 +14,6 @@ import (
 	"gabe565.com/ransom/internal/config"
 	"gabe565.com/ransom/internal/ransom"
 	"gabe565.com/utils/cobrax"
-	"github.com/charmbracelet/log"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )
@@ -40,16 +39,11 @@ func New(opts ...cobrax.Option) *cobra.Command {
 var ErrArgs = errors.New("requires at least one argument")
 
 func run(cmd *cobra.Command, args []string) error {
-	slog.SetDefault(slog.New(log.New(cmd.ErrOrStderr())))
-
-	conf, ok := config.FromContext(cmd.Context())
-	if !ok {
-		panic("command missing config")
+	conf, err := config.Load(cmd)
+	if err != nil {
+		return err
 	}
 
-	if conf.Prefix != "" {
-		conf.Prefix += "-"
-	}
 	replacer := ransom.Default(conf.Prefix)
 	var result string
 	if len(args) != 0 {
