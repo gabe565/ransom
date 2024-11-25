@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"os"
 	"strings"
 
 	"gabe565.com/ransom/internal/clipboard"
@@ -44,11 +45,11 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 
 	replacer := ransom.Default(conf.Prefix)
-	var result string
+	var result strings.Builder
 	if len(args) != 0 {
-		result = replacer.Replace(args...)
-		if len(result) != 0 {
-			if _, err := io.WriteString(cmd.OutOrStdout(), result+"\n"); err != nil {
+		result.WriteString(replacer.Replace(args...))
+		if result.Len() != 0 {
+			if _, err := io.WriteString(cmd.OutOrStdout(), result.String()+"\n"); err != nil {
 				return err
 			}
 		}
@@ -57,27 +58,32 @@ func run(cmd *cobra.Command, args []string) error {
 			return ErrArgs
 		}
 
+		if f, ok := cmd.InOrStdin().(*os.File); ok {
+			if info, err := f.Stat(); err == nil {
+				result.Grow(int(info.Size()))
+			}
+		}
+
 		scanner := bufio.NewScanner(cmd.InOrStdin())
 		for scanner.Scan() {
 			replaced := replacer.Replace(scanner.Text() + "\n")
 			if _, err := io.WriteString(cmd.OutOrStdout(), replaced); err != nil {
 				return err
 			}
-			result += replaced
+			result.WriteString(replaced)
 		}
 		if scanner.Err() != nil {
 			return scanner.Err()
 		}
-		result = strings.TrimRight(result, "\n")
 	}
 
-	if len(result) != 0 && !conf.NoCopy {
+	if !conf.NoCopy && result.Len() != 0 {
 		cmd.SilenceUsage = true
 		if err := clipboard.Init(); err != nil {
 			return fmt.Errorf("failed to copy: %w", err)
 		}
 
-		clipboard.WriteText(result)
+		clipboard.WriteText(result.String())
 		slog.Info("Copied to clipboard")
 	}
 
