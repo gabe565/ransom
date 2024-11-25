@@ -50,9 +50,13 @@ func New(opts ...Option) *Replacer {
 }
 
 type Replacer struct {
-	pre  []string
-	loop []string
-	post []string
+	pre          []string
+	preReplacer  *strings.Replacer
+	loop         []string
+	loopReplacer *strings.Replacer
+	post         []string
+	postReplacer *strings.Replacer
+	clean        bool
 }
 
 func sep(s string) string {
@@ -65,6 +69,7 @@ func sep(s string) string {
 
 func (r *Replacer) WithRaw(from, to string) *Replacer {
 	r.loop = append(r.loop, from, to)
+	r.clean = false
 	return r
 }
 
@@ -98,7 +103,33 @@ func (r *Replacer) With(s ...string) *Replacer {
 	return r.WithRaw(from, to)
 }
 
+func (r *Replacer) Build() {
+	if len(r.pre) == 0 {
+		r.preReplacer = nil
+	} else {
+		r.preReplacer = strings.NewReplacer(r.pre...)
+	}
+
+	if len(r.loop) == 0 {
+		r.loopReplacer = nil
+	} else {
+		r.loopReplacer = strings.NewReplacer(r.loop...)
+	}
+
+	if len(r.post) == 0 {
+		r.postReplacer = nil
+	} else {
+		r.postReplacer = strings.NewReplacer(r.post...)
+	}
+
+	r.clean = true
+}
+
 func (r *Replacer) Replace(args ...string) string {
+	if !r.clean {
+		r.Build()
+	}
+
 	s := strings.Join(args, " ")
 	if len(s) == 0 {
 		return ""
@@ -108,21 +139,20 @@ func (r *Replacer) Replace(args ...string) string {
 	s = strings.ToLower(s)
 
 	// Run the initial replacers
-	if len(r.pre) != 0 {
-		s = strings.NewReplacer(r.pre...).Replace(s)
+	if r.pre != nil {
+		s = r.preReplacer.Replace(s)
 	}
 
 	// Surround with space since some replacers depend on it
 	const prefixSuffix = ":" + Space + ":"
 	s = prefixSuffix + s + prefixSuffix
 
-	if len(r.loop) != 0 {
+	if r.loopReplacer != nil {
 		// Run the loop replacers
 		// This is required since strings.Replacer does not handle overlaps
-		sr := strings.NewReplacer(r.loop...)
 		for {
 			prev := s
-			s = sr.Replace(s)
+			s = r.loopReplacer.Replace(s)
 			if s == prev {
 				break
 			}
@@ -130,8 +160,8 @@ func (r *Replacer) Replace(args ...string) string {
 	}
 
 	// Run the final replacers
-	if len(r.post) != 0 {
-		s = strings.NewReplacer(r.post...).Replace(s)
+	if r.postReplacer != nil {
+		s = r.postReplacer.Replace(s)
 	}
 
 	// Trim the spaces

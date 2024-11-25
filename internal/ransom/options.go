@@ -30,5 +30,6 @@ func WithAlphabet(prefix string) Option {
 				r.post = append(r.post, ":"+letter+":", ":"+prefix+letter+":")
 			}
 		}
+		r.clean = false
 	}
 }
