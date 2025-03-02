@@ -9,7 +9,7 @@ import (
 )
 
 func TestNewContext(t *testing.T) {
-	ctx := NewContext(context.Background(), New())
+	ctx := NewContext(t.Context(), New())
 	require.NotNil(t, ctx)
 	conf, ok := ctx.Value(configKey).(*Config)
 	assert.True(t, ok)
@@ -17,7 +17,7 @@ func TestNewContext(t *testing.T) {
 }
 
 func TestFromContext(t *testing.T) {
-	ctx := context.WithValue(context.Background(), configKey, New())
+	ctx := context.WithValue(t.Context(), configKey, New())
 	conf, ok := FromContext(ctx)
 	assert.True(t, ok)
 	assert.NotNil(t, conf)

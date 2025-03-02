@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"io"
 	"strings"
 	"testing"
@@ -134,7 +133,7 @@ func Test_run(t *testing.T) {
 			if tt.args.stdin != nil {
 				cmd.SetIn(tt.args.stdin)
 			}
-			cmd.SetContext(config.NewContext(context.Background(), tt.config))
+			cmd.SetContext(config.NewContext(t.Context(), tt.config))
 			cmd.SetOut(&buf)
 			tt.wantErr(t, run(cmd, tt.args.args))
 			assert.Equal(t, tt.want, buf.String())
