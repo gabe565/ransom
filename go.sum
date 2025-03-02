@@ -1,5 +1,5 @@
-gabe565.com/utils v0.0.0-20241116061915-abe2278ecd5c h1:1rmGsS/Sbm85ZELLkfOtXJ99v3YHdmqvkhMDLteLUug=
-gabe565.com/utils v0.0.0-20241116061915-abe2278ecd5c/go.mod h1:1WioSVukwGZYG4Q0LJBnRhgYyVljmW2Izl+RW36ALUc=
+gabe565.com/utils v0.0.0-20250302063333-ede73b14282c h1:740ifPX0340EHhAPnr5PJ5FgpDFMX3EEmd8CMLcSi5I=
+gabe565.com/utils v0.0.0-20250302063333-ede73b14282c/go.mod h1:zPhcEoKWZOPz7CH+g3nzkKY/AOs+QEo9SokKKkJyq2U=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=
 github.com/creack/pty v1.1.24 h1:bJrF4RRfyJnbTJqzRLHzcGaZK1NeM5kTC9jGgovnR1s=
 github.com/creack/pty v1.1.24/go.mod h1:08sCNb52WyoAwi2QDyzUCTgcvVFhUzewun7wtTfvcwE=
