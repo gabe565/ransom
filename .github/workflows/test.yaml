@@ -14,6 +14,10 @@ jobs:
         with:
           go-version-file: go.mod
           cache: false
+      - name: Install apt dependencies
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: libx11-dev
       - name: Lint
         uses: golangci/golangci-lint-action@v6
 
@@ -27,5 +31,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - name: Install apt dependencies
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: libx11-dev
       - name: Test
         run: go test ./...
