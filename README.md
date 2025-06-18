@@ -25,3 +25,5 @@ $ ransom hello world
 :h::e::l::l::o::blank::w::o::r::l::d:
 INFO Copied to clipboard
 ```
+
+Slack has some letter fonts built-in, so try it with `--prefix alphabet-yellow` and `--prefix alphabet-white`!
