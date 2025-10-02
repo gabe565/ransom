@@ -9,7 +9,7 @@ import (
 func Init() (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("%s", r) //nolint:goerr113
+			err = fmt.Errorf("%s", r) //nolint:err113
 		}
 	}()
 
