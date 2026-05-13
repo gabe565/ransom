@@ -3,7 +3,7 @@ module gabe565.com/ransom
 go 1.26.1
 
 require (
-	gabe565.com/utils v0.0.0-20260310002041-b3b94f17b36b
+	gabe565.com/utils v0.0.0-20260511235214-4059440fa83b
 	github.com/lmittmann/tint v1.1.3
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
